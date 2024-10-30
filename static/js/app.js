@@ -83,14 +83,20 @@ const app = createApp({
                 alert('Error fetching headers: ' + error.message)
             }
         },
+        getFormattedTimestamp() {
+            const now = new Date()
+            const date = now.toISOString().split('T')[0]
+            const time = now.toTimeString().split(' ')[0].replace(/:/g, '')
+            return `${date}_${time}`
+        },
         exportToJSON() {
             try {
                 const jsonData = JSON.stringify(this.results, null, 2)
                 const blob = new Blob([jsonData], { type: 'application/json' })
                 const url = window.URL.createObjectURL(blob)
 
-                // Create filename with timestamp and original filename
-                const timestamp = new Date().toISOString().split('T')[0]
+                // Create filename with detailed timestamp
+                const timestamp = this.getFormattedTimestamp()
                 const filename = this.originalFileName
                     ? `${timestamp}_export_${this.originalFileName}.json`
                     : `${timestamp}_export.json`
@@ -115,8 +121,8 @@ const app = createApp({
                 const blob = new Blob([csv], { type: 'text/csv' })
                 const url = window.URL.createObjectURL(blob)
 
-                // Create filename with timestamp and original filename
-                const timestamp = new Date().toISOString().split('T')[0]
+                // Create filename with detailed timestamp
+                const timestamp = this.getFormattedTimestamp()
                 const filename = this.originalFileName
                     ? `${timestamp}_export_${this.originalFileName}.csv`
                     : `${timestamp}_export.csv`
